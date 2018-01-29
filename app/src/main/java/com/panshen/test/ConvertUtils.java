@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 
 public class ConvertUtils {
 
-    public static final int REFERENCE_WIDTH = 480;
-    public static final int REFERENCE_HEIGHT = 820;
+    public static final int REFERENCE_WIDTH = 671;
+    public static final int REFERENCE_HEIGHT = 988;
 
     /**
      *
