@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -30,9 +29,8 @@ public class PosterView extends FrameLayout implements PicFrameImageView.OnSingl
 
     private ArrayList<Config> configs = new ArrayList<>();
 
-
     /**
-     * PicFrameView which holds all PicFrameImageView and DecorateView
+     * PicFrameView which holds all PicFrameImageView and DecorateView res
      */
     private PicFrameImageView editingFrameImage;
 
@@ -88,9 +86,12 @@ public class PosterView extends FrameLayout implements PicFrameImageView.OnSingl
         PicFrameImageView picFrameImageView = new PicFrameImageView(getContext());
         config.setPicFrameImageView(picFrameImageView);
         picFrameImageView.setUpSingleTapListener(this);
+        picFrameImageView.setEnableBorder(config.isEnableBorder());
         configs.add(config);
 
-        picFrameImageView.setCoverRes(config.getCoverRes());
+        if (config.getCoverRes() != null)
+            picFrameImageView.setCoverRes(config.getCoverRes());
+
         containerView.addView(picFrameImageView);
         adjustView(picFrameImageView, config);
     }
@@ -112,11 +113,11 @@ public class PosterView extends FrameLayout implements PicFrameImageView.OnSingl
     }
 
     /**
-     * 重置View的宽高
+     * 使用资源的宽高重置View的宽高
      */
     void adjustView(View view, Config config) {
-        view.getLayoutParams().width = config.getTopRight().x - config.getTopLeft().x;
-        view.getLayoutParams().height = config.getBottomLeft().y - config.getTopLeft().y;
+        view.getLayoutParams().width = config.getRightTop().x - config.getLeftTop().x;
+        view.getLayoutParams().height = config.getLeftBottom().y - config.getLeftTop().y;
     }
 
     public PicFrameImageView getEditingPicFrameView() {

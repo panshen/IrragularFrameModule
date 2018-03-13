@@ -1,4 +1,4 @@
-package com.panshen.test;
+package com.panshen.test.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -1,15 +1,14 @@
-package com.panshen.test;
+package com.panshen.test.utils;
 
 import java.math.BigDecimal;
 
 
 public class ConvertUtils {
 
-    public static final int REFERENCE_WIDTH = 671;
-    public static final int REFERENCE_HEIGHT = 988;
+    public static final int REFERENCE_WIDTH = 480;
+    public static final int REFERENCE_HEIGHT = 820;
 
     /**
-     *
      * @param inPixle 坐标
      * @param screenWidth View的宽度
      * @return
@@ -25,8 +24,8 @@ public class ConvertUtils {
      * @param useingHeight 计算之后的View的高度
      * @return
      */
-    public static float convertHeight(int inPixle, int useingHeight) {
-        float ratio = (float) useingHeight / REFERENCE_HEIGHT;
+    public static float convertHeight(int inPixle, float useingHeight) {
+        float ratio =  useingHeight / REFERENCE_HEIGHT;
         return inPixle * ratio;
     }
 

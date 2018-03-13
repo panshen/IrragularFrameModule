@@ -1,4 +1,4 @@
-package com.panshen.test;
+package com.panshen.test.activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -19,6 +19,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.panshen.test.Event;
+import com.panshen.test.GifSizeFilter;
+import com.panshen.test.ImageConfig;
+import com.panshen.test.PicFrameConfig;
+import com.panshen.test.PosterView;
+import com.panshen.test.R;
+import com.panshen.test.TextConfig;
+import com.panshen.test.utils.ConvertV2;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -40,7 +48,7 @@ import java.util.Date;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class MainActivity extends AppCompatActivity {
+public class IrregularActivity extends AppCompatActivity {
     PosterView posterLayout;
 
     int width;
@@ -49,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView ivCaptureView;
     Button btCapture;
+    Bitmap bitmap = null;
+    ConvertV2 convertV2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,51 +75,56 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.single_irregular_bottom_frame);
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
+        convertV2 = new ConvertV2(671f, 988f, displayMetrics);
+
         posterLayout = findViewById(R.id.imlayout);
+        float ratio = (float) bitmap.getHeight() / (float) bitmap.getWidth();
 
         width = displayMetrics.widthPixels;
-        //写死了长宽比 如果后台不传固定分辨率图片的话 ， 就需要把图片分辨率先传过来
-        height = (int) (width * 1.4f);
+        height = (int) (width * ratio);
+
         posterLayout.adjustView(width, height);
 
         /**
          * add a PicFrameImageView using config
          */
         PicFrameConfig picFrameConfig1 = new PicFrameConfig();
-        picFrameConfig1.setTopLeft(new Point((int) ConvertUtils.convertWidth(64, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(178, height)));
+        picFrameConfig1.setLeftTop(new Point((int) convertV2.convertWidth(77),
+                (int) convertV2.convertHeight(191,height)));
 
-        picFrameConfig1.setTopRight(new Point((int) ConvertUtils.convertWidth(577, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(178, height)));
+        picFrameConfig1.setRightTop(new Point((int) convertV2.convertWidth(566),
+                (int) convertV2.convertHeight(191,height)));
 
-        picFrameConfig1.setBottomLeft(new Point((int) ConvertUtils.convertWidth(64, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(710, height)));
+        picFrameConfig1.setLeftBottom(new Point((int) convertV2.convertWidth(77),
+                (int) convertV2.convertHeight(728,height)));
 
-        picFrameConfig1.setBottomRight(new Point((int) ConvertUtils.convertWidth(579, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(710, height)));
+        picFrameConfig1.setRightBottom(new Point((int) convertV2.convertWidth(566),
+                (int) convertV2.convertHeight(728,height)));
 
-        picFrameConfig1.setCoverRes(R.mipmap.template4_irregular_frame);
+        picFrameConfig1.setCoverRes(R.mipmap.single_irregular_frame);
         posterLayout.addConfig(picFrameConfig1);
 
         /**
          * add a ImageView using config
          */
         ImageConfig img = new ImageConfig();
-        img.setTopLeft(new Point((int) ConvertUtils.convertWidth(372, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(198, height)));
+        img.setLeftTop(new Point((int) convertV2.convertWidth(372),
+                (int) convertV2.convertHeight(198,height)));
 
-        img.setTopRight(new Point((int) ConvertUtils.convertWidth(634, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(198, height)));
+        img.setRightTop(new Point((int) convertV2.convertWidth(634),
+                (int) convertV2.convertHeight(198,height)));
 
-        img.setBottomLeft(new Point((int) ConvertUtils.convertWidth(371, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(345, height)));
+        img.setLeftBottom(new Point((int) convertV2.convertWidth(371),
+                (int) convertV2.convertHeight(345,height)));
 
-        img.setBottomRight(new Point((int) ConvertUtils.convertWidth(633, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(345, height)));
-        img.setImgRes(R.mipmap.template4_decorate);
+        img.setRightBottom(new Point((int) convertV2.convertWidth(633),
+                (int) convertV2.convertHeight(345,height)));
+        img.setImgRes(R.mipmap.single_irregular_decorate);
         posterLayout.addConfig(img);
 
 
@@ -117,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
          * add a TextView using config
          */
         TextConfig textConfig = new TextConfig();
-        textConfig.setTopLeft(new Point((int) ConvertUtils.convertWidth(121, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(769, height)));
+        textConfig.setLeftTop(new Point((int) convertV2.convertWidth(121),
+                (int) convertV2.convertHeight(769,height)));
         textConfig.setTextColor(Color.BLACK);
         textConfig.setTextContent(new Date().toLocaleString());
         posterLayout.addConfig(textConfig);
@@ -127,19 +142,19 @@ public class MainActivity extends AppCompatActivity {
          * add a TextView using config
          */
         TextConfig textConfig2 = new TextConfig();
-        textConfig2.setTopLeft(new Point((int) ConvertUtils.convertWidth(121, displayMetrics.widthPixels),
-                (int) ConvertUtils.convertHeight(812, height)));
+        textConfig2.setLeftTop(new Point((int) convertV2.convertWidth(121),
+                (int) convertV2.convertHeight(812,height)));
         textConfig2.setTextColor(Color.BLACK);
         textConfig2.setTextContent("RunawaYy");
         posterLayout.addConfig(textConfig2);
 
-        posterLayout.setUpImg(BitmapFactory.decodeResource(getResources(), R.mipmap.template4_bottom_frame));
+        posterLayout.setUpImg(bitmap);
 
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    void onEvent(Event event) {
+   public void onEvent(Event event) {
 
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -152,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
-                            Matisse.from(MainActivity.this)
+                            Matisse.from(IrregularActivity.this)
                                     .choose(MimeType.allOf())
                                     .countable(true)
                                     .capture(true)
@@ -168,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                                     .forResult(REQUEST_CODE_CHOOSE);
 
                         } else {
-                            Toast.makeText(MainActivity.this, "primission denied", Toast.LENGTH_LONG)
+                            Toast.makeText(IrregularActivity.this, "primission denied", Toast.LENGTH_LONG)
                                     .show();
                         }
                     }
@@ -271,12 +286,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static Bitmap getBitmapFromView(View view) {
         //Define a bitmap with the same size as the view
-        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         //Bind a canvas to it
         Canvas canvas = new Canvas(returnedBitmap);
         //Get the view's background
-        Drawable bgDrawable =view.getBackground();
-        if (bgDrawable!=null)
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null)
             //has background drawable, then draw it on the canvas
             bgDrawable.draw(canvas);
         else
